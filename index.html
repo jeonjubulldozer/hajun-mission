@@ -124,7 +124,11 @@ h2{font-size:21px;margin:24px 4px 10px}
 .team .tb{display:flex;height:24px;border-radius:12px;overflow:hidden;background:var(--track);margin:8px 0}
 .team .tb i{display:block;height:100%}
 .team .big{font-size:30px}
-.team .msg{font-size:14px;color:var(--mute)}
+.team .msg{font-size:14px;color:var(--mute);line-height:1.5}
+.team .tm{padding:8px 0;border-bottom:2px dashed var(--line)}
+.team .tm:last-of-type{border-bottom:0}
+.team .tt{font-size:15px;margin-bottom:2px}
+.team .big{font-size:26px}
 .cloud{padding:12px 16px}
 .cloud .st{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px}
 .cloud .st i{width:9px;height:9px;border-radius:50%;background:var(--mute);display:inline-block;margin-right:7px}
@@ -310,7 +314,7 @@ h2{font-size:21px;margin:24px 4px 10px}
 
   <section class="card rival"><h3>🗺️ 영어 모험 지도</h3><div class="next" id="enext"></div><div id="erungs"></div></section>
 
-  <section class="card vs team" id="vs" style="display:none"><h3>🤝 아빠랑 한 팀 · 이번 주 도장</h3><div id="vsBody"></div></section>
+  <section class="card vs team" id="vs" style="display:none"><h3>🤝 아빠랑 한 팀 · 이번 주</h3><div id="vsBody"></div></section>
 
   <section class="card"><h3>🗓️ 이번 주 스티커판</h3><div class="week" id="week"></div></section>
 
@@ -661,7 +665,7 @@ function renderDay(){
     const b=document.createElement('button');b.className=(k===dk(t)?'tod':'')+(fut?' fut':'');b.innerHTML=`<span>${lb}</span><i class="${k===key?'cur':''}">${st}</i>`;
     if(!fut)b.onclick=()=>go(d);w.appendChild(b)});
   // dad vs hajun (같은 기기에 아빠 운동 앱 기록이 있을 때만)
-  renderVs(ws);
+  renderVs();
   // groups
   const gwrap=document.getElementById('groups');gwrap.innerHTML='';
   GROUPS.forEach(([g,title,ar,desc])=>{
@@ -671,13 +675,25 @@ function renderDay(){
     if(g==='bag'){const el=document.createElement('div');el.className='mc';el.innerHTML='<div class="ic">📸</div><div class="mid"><div class="nm">운동 인증샷</div><div class="pg">불가리안 백 하는 모습 찍어서 올려!</div></div>';gwrap.appendChild(el);photoRows(el,r,['운동'])}
   });
 }
-function renderVs(ws){
-  let dad=null;try{dad=JSON.parse(localStorage.getItem('workout-log-v1')||'null')}catch(e){}
-  const box=document.getElementById('vs');if(!dad){box.style.display='none';return}
-  let h=0,a=0;for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);const k=dk(d);h+=places(rec(k)).length;const dr=dad[k]||{};const gp=Array.isArray(dr.gymPlaces)?dr.gymPlaces.length:0;a+=gp?(dr.gymTimes||1):0}
-  const tot=h+a;box.style.display='';
-  document.getElementById('vsBody').innerHTML=`<div class="big">우리 팀 ${tot}회 💪</div><div class="tb"><i style="width:${tot?h/tot*100:0}%;background:var(--sky)"></i><i style="width:${tot?a/tot*100:0}%;background:var(--coral)"></i></div><div class="msg"><span style="color:var(--sky)">■</span> 하준 ${h}회 + <span style="color:var(--coral)">■</span> 아빠 ${a}회. ${tot?'아빠랑 하준이가 같이 쌓은 땀이야!':'이번 주도 같이 시작해볼까?'}</div>`;
+// ===== 아빠랑 한 팀 (같은 폰이면 폰 저장소, 다른 기기면 클라우드에서 아빠 기록 읽기) =====
+let cloudDad={};
+const DAD_STR=['bbs','bbrow','bblunge','squat','kbs','kbsn','pull','bench'];
+const H_STR=['jp','spin','swsq','row','hang'];
+function dadRecs(){let loc={};try{loc=JSON.parse(localStorage.getItem('workout-log-v1')||'{}')||{}}catch(e){}
+  const out={...cloudDad};for(const k in loc){if(!out[k]||Number(loc[k].u||0)>=Number(out[k].u||0))out[k]=loc[k]}return out}
+function renderVs(){
+  const t=today(),ws=new Date(t);ws.setDate(t.getDate()-((t.getDay()+6)%7));
+  const dad=dadRecs(),box=document.getElementById('vs');if(!Object.keys(dad).length){box.style.display='none';return}
+  let hg=0,ag=0,hs=0,as=0,hrep=0,amin=0;
+  for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);const k=dk(d),r=rec(k),dr=dad[k]||{};
+    hg+=places(r).length;const gp=Array.isArray(dr.gymPlaces)?dr.gymPlaces.length:0;ag+=gp?(dr.gymTimes||1):0;
+    if(H_STR.some(x=>(Number(r[x])||0)>0))hs++;hrep+=['jp','spin','swsq','row'].reduce((s,x)=>s+(Number(r[x])||0),0);
+    if((Number(dr.mins)||0)>0||DAD_STR.some(x=>(Number(dr[x])||0)>0))as++;amin+=Number(dr.mins)||0}
+  box.style.display='';
+  const row=(title,unit,hv,av,detail,msg0)=>{const tot=hv+av;return `<div class="tm"><div class="tt">${title}</div><div class="big">우리 팀 ${tot}${unit} 💪</div><div class="tb"><i style="width:${tot?hv/tot*100:0}%;background:var(--sky)"></i><i style="width:${tot?av/tot*100:0}%;background:var(--coral)"></i></div><div class="msg"><span style="color:var(--sky)">■</span> 하준 ${hv}${unit} + <span style="color:var(--coral)">■</span> 아빠 ${av}${unit}${detail?`<br>${detail}`:''}${tot?'':`<br>${msg0}`}</div></div>`};
+  document.getElementById('vsBody').innerHTML=row('🥋 도장 출석','회',hg,ag,'','이번 주도 같이 시작해볼까?')+row('🏋️ 스트랭스 한 날','일',hs,as,`하준 불가리안 백 ${hrep.toLocaleString()}회 · 아빠 스트랭스 ${amin}분`,'오늘 같이 땀 흘려볼까?')+`<div class="msg" style="margin-top:8px">아빠랑 하준이가 같이 쌓은 땀이야! 🤝</div>`;
 }
+
 
 /* ===== 월별 ===== */
 function renderMonth(){
@@ -721,8 +737,8 @@ const CLOUD_URL='https://script.google.com/macros/s/AKfycbyPjFmpmh7CP-ObjrZ3FJrp
 let ckey='';try{const own=JSON.parse(localStorage.getItem('hajun-cloud')||'null'),dad=JSON.parse(localStorage.getItem('workout-cloud')||'null');ckey=(own&&own.key)||(dad&&dad.key)||''}catch(e){}
 let pending=new Set(),ptimer=null,busy=false,cloudReady=false;
 function cstat(c,t){const d=document.getElementById('cdot'),s=document.getElementById('ctext');if(d){d.className=c;s.textContent=t}}
-function mergeIn(remote){let ch=false;for(const rk in remote){if(rk.indexOf('h:')!==0)continue;const d=rk.slice(2);if(!isDate(d))continue;const r=remote[rk],l=data[d];if(!l||Number(r.u||0)>Number(l.u||0)){data[d]=r;ch=true}}
-  if(ch){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}render()}}
+function mergeIn(remote){let ch=false;const cd={};for(const rk in remote)if(isDate(rk))cd[rk]=remote[rk];cloudDad=cd;for(const rk in remote){if(rk.indexOf('h:')!==0)continue;const d=rk.slice(2);if(!isDate(d))continue;const r=remote[rk],l=data[d];if(!l||Number(r.u||0)>Number(l.u||0)){data[d]=r;ch=true}}
+  if(ch){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}render()}else renderVs()}
 async function cloudPull(){
   if(!ckey)return;cstat('busy','동기화 중…');
   try{const j=await (await fetch(CLOUD_URL+'?key='+encodeURIComponent(ckey))).json();
