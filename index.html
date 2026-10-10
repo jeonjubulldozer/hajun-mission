@@ -138,6 +138,46 @@ h2{font-size:21px;margin:24px 4px 10px}
 .cform.open{display:flex}
 .cform input{flex:1;min-width:0;font:inherit;font-size:14px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--panel2);color:var(--ink)}
 .cform button{padding:10px 12px;border-radius:12px;background:var(--ink);color:var(--bg);font-size:14px;flex:none}
+.mc.comp{background:linear-gradient(135deg,#FFF4E6,var(--panel))}
+.mc.comp.done{border-color:#FF922B;background:color-mix(in srgb,#FF922B 14%,var(--panel))}
+.cplaces{grid-template-columns:repeat(3,1fr)}
+.cnote{width:100%;font:inherit;font-size:15px;line-height:1.45;padding:10px 12px;border-radius:14px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);resize:vertical}
+.clog .csum{font-size:15px;margin-bottom:6px;line-height:1.5}
+.clog .csum b{color:#E8590C}
+.clog .cr{display:flex;gap:10px;padding:9px 0;border-top:2px dashed var(--line)}
+.clog .cd{width:46px;flex:none;font-size:15px;color:#E8590C}
+.clog .cb{flex:1;min-width:0;font-size:16px}
+.clog .cb small{font-size:12px;color:var(--mute);margin-left:4px}
+.clog .cb p{font-size:14px;color:var(--mute);margin-top:3px;line-height:1.45}
+.clog .cb p.qline{color:var(--ink)}
+.cth{display:flex;gap:6px;margin-top:6px}
+.cth:empty{display:none}
+.cth img{width:64px;height:64px;border-radius:12px;object-fit:cover}
+.qadd{width:100%;background:var(--panel2);border-radius:14px;padding:10px 12px}
+.qadd .ql{font-size:13px;color:var(--mute);margin-bottom:6px}
+.qchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.qchips span{font-size:14px;background:var(--panel);border-radius:99px;padding:4px 10px}
+.qrow{display:flex;gap:6px}
+.qrow input{flex:1;min-width:0;font:inherit;font-size:15px;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--panel);color:var(--ink)}
+.qrow button{padding:9px 14px;border-radius:12px;background:#FF922B;color:#fff;font-size:15px;flex:none}
+.mc.quest{border-color:#FF922B;background:linear-gradient(135deg,#FFF4E6,var(--panel))}
+.qlist{width:100%;display:flex;flex-direction:column;gap:10px}
+.qitem{background:var(--panel);border-radius:16px;padding:10px 12px;box-shadow:0 3px 0 rgba(0,0,0,.06)}
+.qitem .qt{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.qitem .qt b{font-size:17px;font-weight:400}
+.qitem .qt small{font-size:12px;color:var(--mute);flex:none}
+.qitem .qp{height:9px;border-radius:5px;background:var(--track);overflow:hidden;margin:7px 0 4px}
+.qitem .qp i{display:block;height:100%;background:#FF922B;border-radius:5px}
+.qitem.ok .qp i{background:var(--mint)}
+.qitem .qs{font-size:13px;color:var(--mute)}
+.qbtn{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.qbtn button{padding:11px 6px;border-radius:12px;background:var(--panel2);font-size:14px;box-shadow:0 3px 0 rgba(0,0,0,.08)}
+.qbtn button small{font-size:11px;opacity:.8}
+.qbtn button.on{background:#FF922B;color:#fff}
+.qbtn .over{grid-column:1/-1;background:var(--panel2)}
+.qbtn .over:not(:disabled){background:var(--grape);color:#fff}
+.qbtn .over.on{background:var(--mint);color:#fff}
+.qbtn .over:disabled{opacity:.45}
 /* bubble */
 .bubble{background:var(--panel);border-radius:22px;padding:14px 16px;margin-bottom:14px;box-shadow:var(--pop);display:flex;gap:12px;align-items:center}
 .bubble .face{font-size:38px;flex:none}
@@ -308,6 +348,8 @@ h2{font-size:21px;margin:24px 4px 10px}
   <h2>🔥 하준이의 성장 기록</h2>
   <section class="card"><h3>🐞 곤충 파워 키우기</h3><div class="pw" id="pw"></div></section>
 
+  <section class="card clog"><h3>🏆 하준이의 대회 기록</h3><div id="clog"></div></section>
+
   <section class="card prs"><h3>🏅 어제의 하준 이기기</h3><p class="gdesc" style="margin:0 0 4px">남이 아니라 어제의 나랑 비교해! 내 최고 기록</p><div id="prs"></div></section>
 
   <section class="card rival"><h3>🥋 하준이의 도장 여정</h3><div class="next" id="rnext"></div><div id="rungs"></div></section>
@@ -340,7 +382,7 @@ h2{font-size:21px;margin:24px 4px 10px}
 
 <script>
 /* ===== 설정 (목표 바꾸려면 여기 숫자만 고치면 돼요) ===== */
-const ICONS={mantis:'<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g stroke="#2F9E44" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M30 37 L20 43 L15 53"/><path d="M34 37 L44 43 L49 53"/><path d="M30 45 L22 53 L20 62"/><path d="M34 45 L42 53 L44 62"/><path d="M29 7 Q25 1 18 2"/><path d="M35 7 Q39 1 46 2"/></g><ellipse cx="32" cy="47" rx="7" ry="15" fill="#51CF66"/><rect x="29.3" y="15" width="5.4" height="22" rx="2.7" fill="#40C057"/><g stroke="#37B24D" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M30 23 L17 19 L21 10"/><path d="M34 23 L47 19 L43 10"/></g><g stroke="#2B8A3E" stroke-width="1.6" stroke-linecap="round"><path d="M18 16 L15 15"/><path d="M19.5 13 L16.5 12"/><path d="M46 16 L49 15"/><path d="M44.5 13 L47.5 12"/></g><path d="M23.5 8.5 L40.5 8.5 L32 18 Z" fill="#69DB7C" stroke="#2F9E44" stroke-width="1.6" stroke-linejoin="round"/><circle cx="24.5" cy="8.5" r="3.4" fill="#2B8A3E"/><circle cx="39.5" cy="8.5" r="3.4" fill="#2B8A3E"/><circle cx="25.4" cy="7.6" r="1.1" fill="#fff"/><circle cx="40.4" cy="7.6" r="1.1" fill="#fff"/></svg>',rhino:'<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g stroke="#3B2314" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M22 32 L12 28 L8 21"/><path d="M42 32 L52 28 L56 21"/><path d="M21 40 L10 42 L6 48"/><path d="M43 40 L54 42 L58 48"/><path d="M23 48 L15 55 L15 61"/><path d="M41 48 L49 55 L49 61"/></g><ellipse cx="32" cy="43" rx="13" ry="17" fill="#7A4421"/><path d="M32 28 V59" stroke="#4A2812" stroke-width="2"/><ellipse cx="32" cy="27" rx="11.5" ry="8" fill="#8B4E26"/><path d="M32 22 L32 17" stroke="#5C3218" stroke-width="3" stroke-linecap="round"/><ellipse cx="32" cy="17" rx="6" ry="4.5" fill="#5C3218"/><path d="M32 14 C30.5 9 33.5 6 32 3" stroke="#5C3218" stroke-width="4.5" stroke-linecap="round" fill="none"/><path d="M28 5.5 L32 2.5 L36 5.5" stroke="#5C3218" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="26.5" cy="38" rx="3" ry="6.5" fill="#fff" opacity=".28"/></svg>',stag:'<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g stroke="#2A1A10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M22 32 L12 28 L8 21"/><path d="M42 32 L52 28 L56 21"/><path d="M21 40 L10 42 L6 48"/><path d="M43 40 L54 42 L58 48"/><path d="M23 48 L15 55 L15 61"/><path d="M41 48 L49 55 L49 61"/></g><ellipse cx="32" cy="45" rx="12" ry="15" fill="#4A2E1A"/><path d="M32 31 V59" stroke="#2A1A10" stroke-width="2"/><rect x="20.5" y="23" width="23" height="10" rx="5" fill="#5A3820"/><rect x="24" y="15" width="16" height="9.5" rx="4.5" fill="#3E2614"/><g stroke="#6B4423" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M27 16 C17 12 17 3 27 2.5"/><path d="M37 16 C47 12 47 3 37 2.5"/><path d="M22.5 9 L26 9.5"/><path d="M41.5 9 L38 9.5"/></g><ellipse cx="27.5" cy="41" rx="3" ry="6" fill="#fff" opacity=".22"/></svg>'};
+const ICONS={pupa:'<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><ellipse cx="32" cy="40" rx="14" ry="20" fill="#E3A65C"/><path d="M20 30 Q17 42 22 54" stroke="#C47F35" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M44 30 Q47 42 42 54" stroke="#C47F35" stroke-width="3" fill="none" stroke-linecap="round"/><g stroke="#B5752E" stroke-width="2" fill="none" stroke-linecap="round"><path d="M21 38 Q32 42 43 38"/><path d="M21 44 Q32 48 43 44"/><path d="M22 50 Q32 54 42 50"/></g><ellipse cx="32" cy="21" rx="11" ry="9" fill="#D4903F"/><path d="M32 14 C30.5 9 33.5 6 32 2.5" stroke="#B5752E" stroke-width="4.5" stroke-linecap="round" fill="none"/><ellipse cx="27" cy="36" rx="3" ry="7" fill="#fff" opacity=".3"/></svg>',mantis:'<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g stroke="#2F9E44" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M30 37 L20 43 L15 53"/><path d="M34 37 L44 43 L49 53"/><path d="M30 45 L22 53 L20 62"/><path d="M34 45 L42 53 L44 62"/><path d="M29 7 Q25 1 18 2"/><path d="M35 7 Q39 1 46 2"/></g><ellipse cx="32" cy="47" rx="7" ry="15" fill="#51CF66"/><rect x="29.3" y="15" width="5.4" height="22" rx="2.7" fill="#40C057"/><g stroke="#37B24D" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M30 23 L17 19 L21 10"/><path d="M34 23 L47 19 L43 10"/></g><g stroke="#2B8A3E" stroke-width="1.6" stroke-linecap="round"><path d="M18 16 L15 15"/><path d="M19.5 13 L16.5 12"/><path d="M46 16 L49 15"/><path d="M44.5 13 L47.5 12"/></g><path d="M23.5 8.5 L40.5 8.5 L32 18 Z" fill="#69DB7C" stroke="#2F9E44" stroke-width="1.6" stroke-linejoin="round"/><circle cx="24.5" cy="8.5" r="3.4" fill="#2B8A3E"/><circle cx="39.5" cy="8.5" r="3.4" fill="#2B8A3E"/><circle cx="25.4" cy="7.6" r="1.1" fill="#fff"/><circle cx="40.4" cy="7.6" r="1.1" fill="#fff"/></svg>',rhino:'<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g stroke="#3B2314" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M22 32 L12 28 L8 21"/><path d="M42 32 L52 28 L56 21"/><path d="M21 40 L10 42 L6 48"/><path d="M43 40 L54 42 L58 48"/><path d="M23 48 L15 55 L15 61"/><path d="M41 48 L49 55 L49 61"/></g><ellipse cx="32" cy="43" rx="13" ry="17" fill="#7A4421"/><path d="M32 28 V59" stroke="#4A2812" stroke-width="2"/><ellipse cx="32" cy="27" rx="11.5" ry="8" fill="#8B4E26"/><path d="M32 22 L32 17" stroke="#5C3218" stroke-width="3" stroke-linecap="round"/><ellipse cx="32" cy="17" rx="6" ry="4.5" fill="#5C3218"/><path d="M32 14 C30.5 9 33.5 6 32 3" stroke="#5C3218" stroke-width="4.5" stroke-linecap="round" fill="none"/><path d="M28 5.5 L32 2.5 L36 5.5" stroke="#5C3218" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="26.5" cy="38" rx="3" ry="6.5" fill="#fff" opacity=".28"/></svg>',stag:'<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g stroke="#2A1A10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M22 32 L12 28 L8 21"/><path d="M42 32 L52 28 L56 21"/><path d="M21 40 L10 42 L6 48"/><path d="M43 40 L54 42 L58 48"/><path d="M23 48 L15 55 L15 61"/><path d="M41 48 L49 55 L49 61"/></g><ellipse cx="32" cy="45" rx="12" ry="15" fill="#4A2E1A"/><path d="M32 31 V59" stroke="#2A1A10" stroke-width="2"/><rect x="20.5" y="23" width="23" height="10" rx="5" fill="#5A3820"/><rect x="24" y="15" width="16" height="9.5" rx="4.5" fill="#3E2614"/><g stroke="#6B4423" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M27 16 C17 12 17 3 27 2.5"/><path d="M37 16 C47 12 47 3 37 2.5"/><path d="M22.5 9 L26 9.5"/><path d="M41.5 9 L38 9.5"/></g><ellipse cx="27.5" cy="41" rx="3" ry="6" fill="#fff" opacity=".22"/></svg>'};
 const ic=s=>ICONS[s]||s;
 
 const PLACES=[['태권도','#FF6B6B'],['유도','#4DABF7'],['주짓수','#845EF7'],['레슬링','#20C997']];
@@ -378,14 +420,14 @@ const M=[
 ];
 const SUCCESS=12; // 별 12개 이상이면 '힘껏 한 날'
 const LEVELS=[
-  [0,'🥚','알 파이터','곤충도 처음엔 작은 알에서 시작해! 하준이도 지금부터!'],
-  [20,'🐛','애벌레 파이터','애벌레는 엄청 많이 먹고 쑥쑥 커. 계란·토마토 잘 먹기!'],
-  [50,'🐜','개미 파이터','개미는 자기 몸무게의 수십 배를 들 수 있대!'],
-  [100,'🦗','메뚜기 파이터','메뚜기는 자기 몸길이의 20배쯤 점프한대! 점핑 프레스처럼!'],
-  [170,'mantis','사마귀 파이터','사마귀는 가시 달린 앞다리로 한 번 잡으면 절대 안 놓쳐! 철봉으로 그립 키우기!'],
-  [260,'stag','사슴벌레 파이터','사슴벌레는 큰 턱으로 상대를 꽉 집어서 번쩍 들어 던져! 유도 메치기처럼!'],
-  [380,'rhino','장수풍뎅이 파이터','장수풍뎅이는 뿔을 상대 밑에 넣고 번쩍 들어 뒤집어! 자기 몸무게의 수백 배를 든대!'],
-  [550,'👑','곤충왕 하준','사마귀 그립, 사슴벌레 메치기, 장수풍뎅이 파워를 다 가졌어!'],
+  [0,'🥚','알 파이터','장수풍뎅이 알은 흙 속에서 2주쯤 지나면 애벌레로 깨어나! 하준이도 지금부터 시작!'],
+  [40,'🐛','1령 애벌레 파이터','갓 깨어난 애벌레는 부엽토를 먹으면서 자라. 하준이는 계란·토마토!'],
+  [100,'🐛','2령 애벌레 파이터','애벌레는 허물을 벗을 때마다 한 단계씩 커져. 하준이도 미션마다 크는 중!'],
+  [200,'🐛','3령 애벌레 파이터','3령 애벌레는 어른 손바닥만큼 커져! 다 커야 번데기가 될 수 있어.'],
+  [350,'pupa','번데기 파이터','번데기는 가만히 있는 것 같지만 안에서 몸이 완전히 바뀌는 중이야. 참고 기다리는 게 인내야!'],
+  [550,'rhino','장수풍뎅이 성충 파이터','드디어 성충! 장수풍뎅이는 뿔을 상대 밑에 넣고 번쩍 들어 뒤집어!'],
+  [800,'rhino','뿔 대장 파이터','장수풍뎅이는 자기 몸무게의 수백 배를 들 수 있대! 곤충 최강 힘!'],
+  [1100,'👑','곤충왕 하준','사마귀 그립, 사슴벌레 메치기, 장수풍뎅이 파워를 다 가졌어!'],
 ];
 const POWERS=[
   {k:'grip', n:'사마귀',     s:'꽉 잡는 그립',       i:'mantis',c:'#37B24D',m:['hang','jp']},
@@ -397,7 +439,7 @@ const powerOf=k=>POWERS.find(p=>p.m.includes(k==='places'?'gym':k));
 const GRAP_RUNGS=[[20,'🌱','매트와 친해지기'],[50,'🧗','포기하지 않는 파이터'],[100,'🏟️','대회 나가서 끝까지 최선!'],[200,'🥋','아빠한테 새 기술 보여주기']];
 // 영어 모험: 스피킹 + 영어책 누적 시간(분)
 const ENG_RUNGS=()=>[[600,'🌱','영어 새싹'],[1800,'🙋','영어로 자기소개'],[3600,'💬','영어로 내 꿈 이야기하기'],[6000,'🌍',`해외에서도 ${curDream().n} 꿈 이루기`]];
-const CHEERS=['어른 사자도 사냥은 대부분 실패한대. 실패는 사냥 연습이야 🦁','틀려도 괜찮아. 틀리면서 머리가 자라는 거야','져도 하준이는 똑같이 소중해 💗','완벽하지 않아도 끝까지 해본 게 진짜 멋진 거야','영어가 막히면 천천히, 한 단어씩! 다 처음엔 어려워','어제보다 1개만 더! 그게 강해지는 비밀이야','넘어져도 다시 일어나면 그게 유도야','땀 흘린 만큼 힘이 세진다 💪','계란 먹고 힘이 불끈! 🥚','속상할 땐 숨 크게 세 번. 그리고 다시!','사랑은 오래 참는 거래. 오늘도 참고 다시 도전!','예수님은 하준이를 언제나 사랑하셔 💗','감사한 마음이 제일 튼튼한 마음이야','예의 바른 말은 상대를 아끼는 사랑이야','오늘의 1회가 내일의 나를 만들어','챔피언도 처음엔 다 져봤어'];
+const CHEERS=['대회는 이기러 가는 게 아니라 배우러 가는 거야. 나가는 사람이 제일 빨리 늘어!','어른 사자도 사냥은 대부분 실패한대. 실패는 사냥 연습이야 🦁','틀려도 괜찮아. 틀리면서 머리가 자라는 거야','져도 하준이는 똑같이 소중해 💗','완벽하지 않아도 끝까지 해본 게 진짜 멋진 거야','영어가 막히면 천천히, 한 단어씩! 다 처음엔 어려워','어제보다 1개만 더! 그게 강해지는 비밀이야','넘어져도 다시 일어나면 그게 유도야','땀 흘린 만큼 힘이 세진다 💪','계란 먹고 힘이 불끈! 🥚','속상할 땐 숨 크게 세 번. 그리고 다시!','사랑은 오래 참는 거래. 오늘도 참고 다시 도전!','예수님은 하준이를 언제나 사랑하셔 💗','감사한 마음이 제일 튼튼한 마음이야','예의 바른 말은 상대를 아끼는 사랑이야','오늘의 1회가 내일의 나를 만들어','챔피언도 처음엔 다 져봤어'];
 
 /* ===== 저장 ===== */
 const KEY='hajun-log-v1';
@@ -414,8 +456,22 @@ const done=(m,r)=>m.t==='gym'?places(r).length>0:m.t==='bool'?!!r[m.k]:val(m,r)>
 const prog=(m,r)=>m.t==='num'?Math.min(1,val(m,r)/m.goal):(done(m,r)?1:0);
 const TOTAL=M.length;
 const stars=r=>M.filter(m=>done(m,r)).length;
+// 대회 출전: 결과(이기고 짐)와 상관없이 나간 것 자체에 큰 보너스
+const COMP_TYPES=[['유도','#4DABF7'],['주짓수','#845EF7'],['레슬링','#20C997']];
+const COMP_BONUS=50;
+const comps=r=>Array.isArray(r&&r.comp)?r.comp:[];
+const compBonus=r=>comps(r).length*COMP_BONUS;
+// 대회 복습: 당한 기술마다 '복습 퀘스트' → 복습할 때마다 보너스 → 스파링에서 같은 기술에 안 당하면 극복!
+const REVIEW_BONUS=20,OVERCOME_BONUS=50,OVERCOME_NEED=3;
+const REV_TYPES=[['v','📺 경기 영상 보기'],['d','🤼 막는 법 연습']];
+const revs=r=>(r&&r.rv&&typeof r.rv==='object')?r.rv:{};
+const reviewBonus=r=>Object.values(revs(r)).reduce((a,l)=>a+(Array.isArray(l)?l.length:0),0)*REVIEW_BONUS;
+function allQuests(){const out=[];for(const k in data)if(isDate(k)&&Array.isArray(data[k].quests))data[k].quests.forEach(q=>out.push({k,q}));return out.sort((a,b)=>a.k<b.k?-1:a.k>b.k?1:0)}
+function revCount(id){let n=0;for(const k in data)if(isDate(k)){const l=revs(data[k])[id];if(Array.isArray(l))n+=l.length}return n}
+const okCount=(from,to)=>allQuests().filter(x=>x.q.ok&&x.q.ok>=from&&x.q.ok<=to).length;
+const dayBonus=(k,r)=>compBonus(r)+reviewBonus(r)+okCount(k,k)*OVERCOME_BONUS;
 const isDate=k=>/^\d{4}-\d{2}-\d{2}$/.test(k);
-function totalXP(){let s=0;for(const k in data)if(isDate(k)&&k<=dk(today()))s+=stars(data[k]);return s}
+function totalXP(){const td=dk(today());let s=0;for(const k in data)if(isDate(k)&&k<=td)s+=stars(data[k])+compBonus(data[k])+reviewBonus(data[k]);return s+okCount('0000',td)*OVERCOME_BONUS}
 function streak(){let s=0;const d=today();if(stars(rec(dk(d)))<SUCCESS)d.setDate(d.getDate()-1);for(let i=0;i<3000;i++){if(stars(rec(dk(d)))>=SUCCESS){s++;d.setDate(d.getDate()-1)}else break}return s}
 function spanDays(){const ks=Object.keys(data).filter(isDate).sort();if(!ks.length)return 1;const f=new Date(ks[0]+'T00:00:00');return Math.max(1,Math.min(7,Math.round((today()-f)/864e5)+1))}
 function recentAvg(){let s=0;const d=today();for(let i=0;i<7;i++){s+=stars(rec(dk(d)));d.setDate(d.getDate()-1)}return s/spanDays()}
@@ -640,13 +696,14 @@ function renderDay(){
   document.getElementById('xpb').style.width=(N?Math.min(100,(xp-L[0])/(N[0]-L[0])*100):100)+'%';
   document.getElementById('xpt').textContent=N?`${N[2]}까지 별 ${N[0]-xp}개!`:'최고 레벨 달성!';
   document.getElementById('fact').textContent='💡 '+L[3];
+  {let pl=null;try{pl=localStorage.getItem('hajun-lv')}catch(e){}try{localStorage.setItem('hajun-lv',li)}catch(e){}if(pl!==null&&li>Number(pl))setTimeout(()=>confetti(`🎉 레벨업! ${L[2]}`),400)}
   // today
-  const s=stars(r);document.getElementById('tS').textContent=s;document.getElementById('tT').textContent=` / ${TOTAL}`;document.getElementById('stk').textContent=(()=>{let n=0;for(let d=1;d<=t.getDate();d++)if(stars(rec(`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(d)}`))>0)n++;return n})();
-  document.getElementById('cheer').textContent=s===0?'하준아, 오늘도 강해질 준비 됐어? 첫 번째 별부터 가보자!':s<5?`좋아! 별 ${s}개! 시작이 반이야!`:s<SUCCESS?`별 ${s}개! ${SUCCESS-s}개만 더 모으면 힘껏 한 날이야!`:s<TOTAL?`힘껏 했어! 별 ${s}개! 올클리어까지 ${TOTAL-s}개 남았어!`:`별 ${TOTAL}개 올클리어!! 오늘 하준이가 챔피언이야 🏆`;
+  const s=stars(r);document.getElementById('tS').textContent=s;{const bb=dayBonus(key,r);document.getElementById('tT').textContent=` / ${TOTAL}`+(bb?`  +${bb} 보너스`:'')}document.getElementById('stk').textContent=(()=>{let n=0;for(let d=1;d<=t.getDate();d++)if(stars(rec(`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(d)}`))>0)n++;return n})();
+  document.getElementById('cheer').textContent=comps(r).length?`🏆 대회에 나간 용기가 오늘 제일 큰 별이야! 보너스 별 +${dayBonus(key,r)}`:okCount(key,key)?`🛡️ 같은 기술에 두 번 안 당했어! 복습이 하준이를 지켜줬어. 보너스 +${dayBonus(key,r)}`:reviewBonus(r)?`📺 복습한 만큼 같은 기술에 안 당해! 오늘 보너스 +${dayBonus(key,r)}`:s===0?'하준아, 오늘도 강해질 준비 됐어? 첫 번째 별부터 가보자!':s<5?`좋아! 별 ${s}개! 시작이 반이야!`:s<SUCCESS?`별 ${s}개! ${SUCCESS-s}개만 더 모으면 힘껏 한 날이야!`:s<TOTAL?`힘껏 했어! 별 ${s}개! 올클리어까지 ${TOTAL-s}개 남았어!`:`별 ${TOTAL}개 올클리어!! 오늘 하준이가 챔피언이야 🏆`;
   document.getElementById('cheer2').textContent='장수풍뎅이 코치: '+CHEERS[Math.floor((cur-new Date(cur.getFullYear(),0,1))/864e5)%CHEERS.length];
   // insect powers
   document.getElementById('pw').innerHTML=POWERS.map(p=>{const ms=p.m.map(k=>M.find(x=>x.k===k));const td=ms.filter(x=>done(x,r)).length;
-    let pts=0;for(const k in data)if(isDate(k)&&k<=dk(t))pts+=ms.filter(x=>done(x,data[k])).length;const lvl=1+Math.floor(pts/10);
+    let pts=0;for(const k in data)if(isDate(k)&&k<=dk(t))pts+=ms.filter(x=>done(x,data[k])).length+(p.k==='throw'?comps(data[k]).length*10:0);if(p.k==='throw')pts+=okCount('0000',dk(t))*10;const lvl=1+Math.floor(pts/10);
     return `<div>${ICONS[p.i]}<div class="pn">${p.n}</div><div class="ps">${p.s}</div><div class="lvp" style="color:${p.c}">Lv.${lvl}</div><div class="pb"><i style="width:${(pts%10)*10}%;background:${p.c}"></i></div><div class="pt">오늘 ${td}/${ms.length}</div></div>`}).join('');
   // 지덕체 · 꿈
   renderJDC(r);renderDream();renderLeader();
@@ -654,7 +711,7 @@ function renderDay(){
   let dj=0;for(const k in data)if(isDate(k)&&k<=dk(t))dj+=places(data[k]).length;
   ladder('rungs','rnext',GRAP_RUNGS,dj,dj/Math.max(1,Object.keys(data).filter(isDate).length),n=>`도장 ${n}회`,'해냈어! 하준이의 노력이 만든 거야');
   document.getElementById('rnext').insertAdjacentHTML('afterbegin',`<div style="margin-bottom:4px">지금까지 도장 <b style="color:var(--grape)">${dj}회</b></div>`);
-  renderPRs(r);
+  renderPRs(r);renderCompLog();
   let em=0,em7=0;for(const k in data)if(isDate(k)&&k<=dk(t))em+=engMin(data[k]);{const d=new Date(t);for(let i=0;i<7;i++){em7+=engMin(rec(dk(d)));d.setDate(d.getDate()-1)}}
   ladder('erungs','enext',ENG_RUNGS(),em,em7/spanDays(),fmtMin,'해냈어! 매일 조금씩 한 덕분이야');
   document.getElementById('enext').insertAdjacentHTML('afterbegin',`<div style="margin-bottom:4px">영어 누적 <b style="color:var(--sky)">${fmtMin(em)}</b> (스피킹 + 영어책)</div>`);
@@ -672,8 +729,59 @@ function renderDay(){
     const A=AREAS.find(x=>x.k===ar);const h=document.createElement('h2');h.innerHTML=`${title}<span class="atag" style="background:${A.c}">${A.n}</span>`;gwrap.appendChild(h);
     if(desc){const pd=document.createElement('p');pd.className='gdesc';pd.textContent=desc;gwrap.appendChild(pd)}
     M.filter(m=>m.g===g).forEach(m=>gwrap.appendChild(card(m,r)));
+    if(g==='dojo'){const qc=questCard(r);if(qc)gwrap.appendChild(qc);gwrap.appendChild(compCard(r))}
     if(g==='bag'){const el=document.createElement('div');el.className='mc';el.innerHTML='<div class="ic">📸</div><div class="mid"><div class="nm">운동 인증샷</div><div class="pg">불가리안 백 하는 모습 찍어서 올려!</div></div>';gwrap.appendChild(el);photoRows(el,r,['운동'])}
   });
+}
+function compCard(r){
+  const key=dk(cur),cs=comps(r),el=document.createElement('div');el.className='mc comp'+(cs.length?' done':'');
+  el.innerHTML=`<div class="badge">🏆</div><div class="ic">🏆</div><div class="mid"><div class="nm">대회 출전 <span class="ptag" style="background:#FF922B">보너스 별 +${COMP_BONUS}</span></div><div class="pg">${cs.length?`나간 것만으로 별 +${compBonus(r)}! 이제 당한 기술을 복습하면 더 받아`:'대회 나간 날 눌러줘! 이기든 지든 별 +'+COMP_BONUS}</div></div>`;
+  const g=document.createElement('div');g.className='places cplaces';
+  COMP_TYPES.forEach(([p,c])=>{const on=cs.includes(p),b=document.createElement('button');b.textContent=p;b.className=on?'on':'';if(on)b.style.background=c;b.setAttribute('aria-pressed',on);
+    b.onclick=()=>{const next=on?cs.filter(x=>x!==p):[...cs,p];data[key]={...rec(key),comp:next,u:Date.now()};save([key]);render();
+      if(!on)setTimeout(()=>confetti(`🏆 ${p} 대회 출전! 보너스 별 +${COMP_BONUS}`),150)};g.appendChild(b)});
+  el.appendChild(g);
+  if(cs.length){
+    const n=document.createElement('textarea');n.className='cnote';n.rows=2;n.placeholder='오늘 잘한 점, 다음에 해볼 것';n.value=r.compNote||'';
+    n.onchange=()=>{data[key]={...rec(key),compNote:n.value.trim(),u:Date.now()};save([key]);renderCompLog()};el.appendChild(n);
+    photoRows(el,r,['대회']);
+    const qs=Array.isArray(r.quests)?r.quests:[];
+    const box=document.createElement('div');box.className='qadd';
+    box.innerHTML=`<div class="ql">🎯 당한 기술 → 복습 퀘스트 (복습할 때마다 +${REVIEW_BONUS}, 극복하면 +${OVERCOME_BONUS})</div><div class="qchips">${qs.map(q=>`<span>${q.ok?'🛡️':'🎯'} ${q.t.replace(/</g,'&lt;')}</span>`).join('')}</div><div class="qrow"><input placeholder="예: 암바 막기" aria-label="당한 기술"><button>추가</button></div>`;
+    const inp=box.querySelector('input');
+    box.querySelector('button').onclick=()=>{const t=inp.value.trim();if(!t)return;const q={id:'q'+Date.now().toString(36),t,ok:null};data[key]={...rec(key),quests:[...qs,q],u:Date.now()};save([key]);render();toast(`🎯 복습 퀘스트 생성: ${t}`)};
+    el.appendChild(box);
+  }
+  return el;
+}
+function questCard(r){
+  const key=dk(cur),list=allQuests().filter(x=>x.k<=key&&(!x.q.ok||x.q.ok===key));if(!list.length)return null;
+  const el=document.createElement('div');el.className='mc quest';
+  el.innerHTML=`<div class="ic">🎯</div><div class="mid"><div class="nm">대회 복습 퀘스트</div><div class="pg">같은 기술에 두 번 안 당하기! 복습 ${OVERCOME_NEED}번 하면 극복 도전</div></div>`;
+  const wrap=document.createElement('div');wrap.className='qlist';
+  list.forEach(({k,q})=>{
+    const n=revCount(q.id),today=revs(r)[q.id]||[],row=document.createElement('div');row.className='qitem'+(q.ok?' ok':'');
+    row.innerHTML=`<div class="qt"><b>${q.t.replace(/</g,'&lt;')}</b><small>${+k.slice(5,7)}/${+k.slice(8)} ${comps(data[k]).join('·')} 대회</small></div><div class="qp"><i style="width:${Math.min(100,n/OVERCOME_NEED*100)}%"></i></div><div class="qs">${q.ok?'🛡️ 극복 완료! 같은 기술에 안 당했어':`복습 ${n}번`+(n<OVERCOME_NEED?` · 극복 도전까지 ${OVERCOME_NEED-n}번`:' · 극복 도전 열림! 🔓')}</div>`;
+    const bt=document.createElement('div');bt.className='qbtn';
+    REV_TYPES.forEach(([t,lb])=>{const on=today.includes(t),b=document.createElement('button');b.className=on?'on':'';b.innerHTML=`${on?'✅ ':''}${lb} <small>+${REVIEW_BONUS}</small>`;
+      b.onclick=()=>{const nx=on?today.filter(x=>x!==t):[...today,t];data[key]={...rec(key),rv:{...revs(rec(key)),[q.id]:nx},u:Date.now()};save([key]);render();
+        if(!on){const c=revCount(q.id);toast(c===OVERCOME_NEED?`🔓 ${q.t} 극복 도전 열림!`:`${lb.split(' ')[0]} 복습 +${REVIEW_BONUS}! 같은 기술에 안 당하는 중`)}};bt.appendChild(b)});
+    const ob=document.createElement('button');ob.className='over'+(q.ok?' on':'');ob.disabled=!q.ok&&n<OVERCOME_NEED;
+    ob.innerHTML=q.ok?'🛡️ 극복! (다시 누르면 취소)':`🛡️ 스파링에서 이 기술 안 당했어! <small>+${OVERCOME_BONUS}</small>`;
+    ob.onclick=()=>{const cr=rec(k),qs=(cr.quests||[]).map(x=>x.id===q.id?{...x,ok:q.ok?null:key}:x);data[k]={...cr,quests:qs,u:Date.now()};save([k]);render();
+      if(!q.ok)setTimeout(()=>confetti(`🛡️ ${q.t} 극복! 같은 기술에 두 번 안 당했어! +${OVERCOME_BONUS}`),150)};
+    bt.appendChild(ob);row.appendChild(bt);wrap.appendChild(row);
+  });
+  el.appendChild(wrap);return el;
+}
+async function fillCompThumbs(){for(const el of document.querySelectorAll('.cth')){const k=el.dataset.k,ids=((data[k]||{}).photos||{})['대회']||[];el.innerHTML='';
+  for(const id of ids.slice(0,4)){const u=await purl(id);if(!u)continue;const im=document.createElement('img');im.src=u;im.alt='대회 사진';im.onclick=()=>openViewer(id,k,'대회');el.appendChild(im)}}}
+function renderCompLog(){
+  const list=Object.keys(data).filter(k=>isDate(k)&&comps(data[k]).length).sort().reverse();
+  const box=document.getElementById('clog');if(!box)return;const qa=allQuests(),okN=qa.filter(x=>x.q.ok).length;
+  box.innerHTML=list.length?`<div class="csum">대회 <b>${list.reduce((a,k)=>a+comps(data[k]).length,0)}번</b> 출전 · 극복한 기술 <b>${okN}개</b> 🛡️<br>나가고, 복습하고, 다시 안 당하면 진짜 강해진 거야 💪</div>`+list.map(k=>{const qs=Array.isArray(data[k].quests)?data[k].quests:[];
+    return `<div class="cr"><div class="cd">${+k.slice(5,7)}/${+k.slice(8)}</div><div class="cb"><div>${comps(data[k]).join(' · ')} <small>+${compBonus(data[k])}⭐</small></div>${data[k].compNote?`<p>${data[k].compNote.replace(/</g,'&lt;')}</p>`:''}<div class="cth" data-k="${k}"></div>${qs.map(q=>`<p class="qline">${q.ok?'🛡️':'🎯'} ${q.t.replace(/</g,'&lt;')} · 복습 ${revCount(q.id)}번${q.ok?` · ${+q.ok.slice(5,7)}/${+q.ok.slice(8)} 극복!`:''}</p>`).join('')}</div></div>`}).join(''):'<div class="csum">첫 대회에 나가면 여기 기록돼! 나간 것 자체가 멋진 거야</div>';
+  fillCompThumbs();
 }
 // ===== 아빠랑 한 팀 (같은 폰이면 폰 저장소, 다른 기기면 클라우드에서 아빠 기록 읽기) =====
 let cloudDad={};
@@ -702,13 +810,13 @@ function renderMonth(){
   const isCurM=y===t.getFullYear()&&m===t.getMonth(),elapsed=isCurM?t.getDate():days;
   document.getElementById('mTitle').textContent=`${y}년 ${m+1}월`;document.getElementById('nm').disabled=isCurM;
   const past=recs.filter(x=>x.key<=tKey);
-  document.getElementById('mstat').innerHTML=`<div><b>⭐${past.reduce((a,x)=>a+stars(x.r),0)}</b><span>이달 모은 별</span></div><div><b>${past.filter(x=>stars(x.r)>=SUCCESS).length}</b><span>힘껏 한 날</span></div><div><b>🏆${past.filter(x=>stars(x.r)===TOTAL).length}</b><span>올클리어</span></div>`;
+  document.getElementById('mstat').innerHTML=`<div><b>⭐${past.reduce((a,x)=>a+stars(x.r)+compBonus(x.r)+reviewBonus(x.r),0)+okCount(recs[0].key,tKey)*OVERCOME_BONUS}</b><span>이달 모은 별</span></div><div><b>${past.filter(x=>stars(x.r)>=SUCCESS).length}</b><span>힘껏 한 날</span></div><div><b>🏆${past.filter(x=>stars(x.r)===TOTAL).length}</b><span>올클리어</span></div>`;
   document.getElementById('pstat').innerHTML=PLACES.map(([p,c])=>`<div style="background:${c}"><b>${recs.filter(x=>places(x.r).includes(p)).length}</b><span>${p}</span></div>`).join('');
   const g=document.getElementById('calGrid');g.innerHTML='';
   for(let i=0;i<first;i++){const e=document.createElement('div');e.className='d empty';g.appendChild(e)}
   recs.forEach(x=>{const sv=stars(x.r),b=document.createElement('button');
     b.className='d '+(sv===TOTAL?'s3':sv>=SUCCESS?'s2':sv>0?'s1':'')+(x.key===dk(cur)?' sel':'')+(x.key>tKey?' fut':'');
-    b.innerHTML=`${x.d}${sv?`<small>⭐${sv}</small>`:''}`;b.setAttribute('aria-label',`${m+1}월 ${x.d}일 별 ${sv}개`);
+    b.innerHTML=`${x.d}${comps(x.r).length?'<small>🏆</small>':okCount(x.key,x.key)?'<small>🛡️</small>':reviewBonus(x.r)?'<small>📺</small>':sv?`<small>⭐${sv}</small>`:''}`;b.setAttribute('aria-label',`${m+1}월 ${x.d}일 별 ${sv}개`);
     if(x.key<=tKey)b.onclick=()=>{go(new Date(y,m,x.d));window.scrollTo({top:0,behavior:'smooth'})};g.appendChild(b)});
   document.getElementById('mrows').innerHTML=M.map(mm=>{const c=past.filter(x=>done(mm,x.r)).length,pct=Math.round(c/elapsed*100),tot=recs.reduce((a,x)=>a+val(mm,x.r),0);
     const tt=mm.t==='gym'?`총 ${tot}회`:mm.t==='bool'?(mm.g==='food'?`${tot}일 먹음`:`${tot}일`):mm.k==='hang'?`총 ${tot}번 · 최고 ${Math.max(0,...recs.map(x=>Number(x.r.hangBest)||0))}초`:`총 ${tot.toLocaleString()}${mm.u}`;
@@ -769,6 +877,14 @@ document.getElementById('nd').onclick=()=>{if(dk(cur)<dk(today())){const d=new D
 document.getElementById('td').onclick=()=>go(today());
 document.getElementById('pm').onclick=()=>{mon=new Date(mon.getFullYear(),mon.getMonth()-1,1);renderMonth()};
 document.getElementById('nm').onclick=()=>{mon=new Date(mon.getFullYear(),mon.getMonth()+1,1);renderMonth()};
+(function seedFirstComp(){try{
+  const k='2026-10-10',F1='hajun-seed-comp-20261010',F2='hajun-seed-quest-20261010';let ch=false;
+  if(!localStorage.getItem(F1)){localStorage.setItem(F1,'1');const r=data[k]||{};if(!comps(r).length){data[k]={...r,comp:['주짓수'],compNote:r.compNote||'첫 주짓수 대회! 스탠딩에서 한 번도 안 넘어갔어. 다음엔 경기 끝날 때까지 상대만 보기 👀',u:Date.now()};ch=true}}
+  if(!localStorage.getItem(F2)){localStorage.setItem(F2,'1');const r=data[k]||{};if(comps(r).length&&!(Array.isArray(r.quests)&&r.quests.length)){data[k]={...r,quests:[{id:'q20261010a',t:'암바 막기',ok:null},{id:'q20261010b',t:'버터플라이 스윕 막기',ok:null}],u:Date.now()};ch=true}}
+  const k2='2026-08-15',F3='hajun-seed-comp-20260815';
+  if(!localStorage.getItem(F3)){localStorage.setItem(F3,'1');const r=data[k2]||{};if(!comps(r).includes('유도')){data[k2]={...r,comp:[...comps(r),'유도'],compNote:r.compNote||'송파 유도대회 · 하준이의 첫 대회! 처음 대회 매트에 선 용기 💪',u:Date.now()};ch=true}}
+  if(ch){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}setTimeout(()=>cloudPush([k,k2]),0)}
+}catch(e){}})();
 render();
 if(ckey)cloudPull();else{cstat('','비밀번호를 넣으면 클라우드 연결');document.getElementById('cform').classList.add('open')}
 </script>
