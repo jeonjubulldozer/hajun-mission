@@ -134,6 +134,16 @@ h2{font-size:21px;margin:24px 4px 10px}
 .cloud .st i{width:9px;height:9px;border-radius:50%;background:var(--mute);display:inline-block;margin-right:7px}
 .cloud .st i.ok{background:var(--mint)} .cloud .st i.bad{background:var(--coral)} .cloud .st i.busy{background:var(--sun)}
 .cloud .st button{font-size:13px;color:var(--mute);text-decoration:underline}
+.relink{display:none;background:linear-gradient(135deg,#FF5C1A,#FFB02E);color:#fff;border-radius:16px;padding:14px 16px;margin:8px 0 10px;font-size:14px;line-height:1.5}
+.relink.open{display:block}
+.relink b{font-size:16px;display:block;margin-bottom:4px}
+.relink p{margin:0 0 10px;font-size:13px}
+.relink form{display:flex;gap:8px}
+.relink input{flex:1;min-width:0;font:inherit;font-size:16px;padding:11px 12px;border-radius:12px;border:0;background:#fff;color:#111}
+.relink button{padding:11px 14px;border-radius:12px;background:#111;color:#fff;font-weight:700;font-size:14px;flex:none;border:0}
+.relink .alt{display:none;width:100%;margin-top:8px;background:rgba(0,0,0,.28)}
+.relink .msg{font-weight:700;margin-top:8px;font-size:13px}
+.relink .msg:empty{display:none}
 .cform{display:none;gap:8px;margin-top:10px}
 .cform.open{display:flex}
 .cform input{flex:1;min-width:0;font:inherit;font-size:14px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--panel2);color:var(--ink)}
@@ -314,6 +324,13 @@ h2{font-size:21px;margin:24px 4px 10px}
 </head>
 <body>
 <div class="wrap">
+  <section class="relink" id="relink">
+    <b>🔒 클라우드 연결이 풀렸어요</b>
+    <p>이 폰의 앱 저장공간이 지워져서 미션 기록과 사진이 비어 보여요. 클라우드에는 그대로 있어요 — 아빠 앱과 같은 비밀번호를 한 번 넣으면 전부 돌아와요.</p>
+    <form id="rlform" onsubmit="return false"><input type="text" name="username" autocomplete="username" value="민기" readonly style="display:none"><input id="rlkey" type="password" name="password" autocomplete="current-password" placeholder="아빠 앱과 같은 비밀번호"><button id="rlgo" type="submit">연결</button></form>
+    <button class="alt" id="rlsaved" type="button">🔑 저장해 둔 비밀번호로 연결</button>
+    <div class="msg" id="rlmsg"></div>
+  </section>
   <header class="top">
     <div><h1 id="dTitle">오늘의 미션</h1><div class="sub" id="dSub"></div></div>
     <div class="nav"><button id="pd" aria-label="전날">‹</button><button id="td">오늘</button><button id="nd" aria-label="다음날">›</button></div>
@@ -379,7 +396,7 @@ h2{font-size:21px;margin:24px 4px 10px}
 
   <section class="card cloud"><div class="st"><b><i id="cdot"></i><span id="ctext">클라우드 확인 중…</span></b><button id="cedit">설정</button></div>
     <div class="phstat" id="phstat"></div>
-    <div class="cform" id="cform"><input id="ckey" placeholder="비밀번호 (아빠 운동 앱과 같은 것)" autocomplete="off"><button id="csave">연결하고 동기화</button></div></section>
+    <div class="cform" id="cform"><input id="ckey" type="password" placeholder="비밀번호 (아빠 운동 앱과 같은 것)" autocomplete="current-password"><button id="csave">연결하고 동기화</button></div></section>
   <p class="foot">기록과 사진은 이 기기와 구글 클라우드에 저장돼요.<br><button id="bexport">백업 내보내기</button><button id="bimport">백업 가져오기</button><button id="reset">전체 지우기</button></p>
 </div>
 <div class="toast" id="toast"></div>
@@ -537,7 +554,7 @@ async function phSyncAll(){if(phSynced||!phKey())return;phSynced=true;phFlush();
   try{const have=new Set(Object.keys(await phGetMap(true))),need=[];
     for(const k in data){const ph=(data[k]||{}).photos||{};for(const p in ph)for(const id of (ph[p]||[]))if(!have.has(id)){const o=await pget(id).catch(()=>null);if(o&&o.blob)need.push(id)}}
     if(need.length){phSetPend([...phPend(),...need]);phStat();phFlush()}}catch(e){}}
-function phStat(){const n=phPend().length,el=document.getElementById('phstat');if(el)el.textContent=n?`사진 ${n}장 클라우드에 올리는 중…`:''}
+function phStat(){const n=phPend().length,el=document.getElementById('phstat');if(el)el.textContent=!n?'':phKey()?`사진 ${n}장 클라우드에 올리는 중…`:`사진 ${n}장 · 클라우드 연결되면 올라가요`}
 let phReplace=null;
 function phReattach(id){phReplace=id;toast('원래 사진을 골라 주세요 · 다시 붙이면 클라우드에도 저장돼요');document.getElementById('prfile').click()}
 document.getElementById('prfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||!phReplace)return;const id=phReplace;phReplace=null;
@@ -821,8 +838,8 @@ function questCard(r){
   });
   el.appendChild(wrap);return el;
 }
-async function fillCompThumbs(){for(const el of document.querySelectorAll('.cth')){const k=el.dataset.k,ids=((data[k]||{}).photos||{})['대회']||[];el.innerHTML='';
-  for(const id of ids.slice(0,4)){const u=await purl(id);if(!u)continue;const im=document.createElement('img');im.src=u;im.alt='대회 사진';im.onclick=()=>openViewer(id,k,'대회');el.appendChild(im)}}}
+async function fillCompThumbs(){const tok=fillCompThumbs.t=(fillCompThumbs.t||0)+1;for(const el of document.querySelectorAll('.cth')){const k=el.dataset.k,ids=((data[k]||{}).photos||{})['대회']||[];el.innerHTML='';
+  for(const id of ids.slice(0,4)){const u=await purl(id);if(tok!==fillCompThumbs.t)return;if(!u)continue;const im=document.createElement('img');im.src=u;im.alt='대회 사진';im.onclick=()=>openViewer(id,k,'대회');el.appendChild(im)}}}
 function renderCompLog(){
   const list=Object.keys(data).filter(k=>isDate(k)&&comps(data[k]).length).sort().reverse();
   const box=document.getElementById('clog');if(!box)return;const qa=allQuests(),okN=qa.filter(x=>x.q.ok).length;
@@ -871,8 +888,8 @@ function renderMonth(){
   renderGallery(recs);
 }
 async function renderGallery(recs){
-  const g=document.getElementById('galGrid'),em=document.getElementById('galEmpty');g.innerHTML='';let n=0;
-  for(const x of recs){const ph=x.r.photos||{};for(const lb in ph)for(const id of ph[lb]){n++;const b=document.createElement('button');const u=await purl(id);if(u){b.innerHTML=`<img src="${u}" alt="${lb}"><span>${x.d}일 ${lb}</span>`;b.onclick=()=>openViewer(id,x.key,lb)}else{b.className='gone';b.innerHTML=`<i>📷</i><b>다시 올리기</b><span>${x.d}일 ${lb}</span>`;b.onclick=()=>phReattach(id)}g.appendChild(b)}}
+  const g=document.getElementById('galGrid'),em=document.getElementById('galEmpty'),tok=renderGallery.t=(renderGallery.t||0)+1;g.innerHTML='';let n=0;
+  for(const x of recs){const ph=x.r.photos||{};for(const lb in ph)for(const id of ph[lb]){n++;const b=document.createElement('button');const u=await purl(id);if(tok!==renderGallery.t)return;if(u){b.innerHTML=`<img src="${u}" alt="${lb}"><span>${x.d}일 ${lb}</span>`;b.onclick=()=>openViewer(id,x.key,lb)}else{b.className='gone';b.innerHTML=`<i>📷</i><b>다시 올리기</b><span>${x.d}일 ${lb}</span>`;b.onclick=()=>phReattach(id)}g.appendChild(b)}}
   em.style.display=n?'none':'';
 }
 
@@ -891,14 +908,40 @@ document.getElementById('reset').onclick=()=>{if(prompt('정말 전부 지우려
 const CLOUD_URL='https://script.google.com/macros/s/AKfycbyPjFmpmh7CP-ObjrZ3FJrpfWYljtQZoaufWq6SL96quXORq5g_zlcneWddW8ADtr5F/exec';
 let ckey='';try{const own=JSON.parse(localStorage.getItem('hajun-cloud')||'null'),dad=JSON.parse(localStorage.getItem('workout-cloud')||'null');ckey=(own&&own.key)||(dad&&dad.key)||''}catch(e){}
 let pending=new Set(),ptimer=null,busy=false,cloudReady=false;
+let relink=!ckey;try{if(localStorage.getItem('hajun-relink')==='1')relink=true}catch(e){}   // 비밀번호 없이 시작 = 저장공간이 지워졌거나 새 기기
+function saveKey(){try{const prev=(JSON.parse(localStorage.getItem('hajun-cloud')||'null')||{}).key,w=JSON.parse(localStorage.getItem('workout-cloud')||'null')||{};if(ckey&&!w.key&&!prev)localStorage.setItem('workout-relink','1');localStorage.setItem('hajun-cloud',JSON.stringify({key:ckey}));localStorage.setItem('workout-cloud',JSON.stringify({url:w.url||CLOUD_URL,...w,key:ckey}))}catch(e){}}
+
+/* ---------- 다시 연결 (폰 저장공간이 지워져도 비밀번호 한 번이면 전부 복구) ---------- */
+const canCred=!!(window.PasswordCredential&&navigator.credentials);
+let typedKey='';
+function rlShow(msg){const r=document.getElementById('relink');r.classList.add('open');document.getElementById('rlmsg').textContent=msg||'';document.getElementById('rlsaved').style.display=canCred?'block':'none'}
+function rlHide(){document.getElementById('relink').classList.remove('open');document.getElementById('rlmsg').textContent='';document.getElementById('rlkey').value=''}
+async function credKey(mediation){if(!canCred)return '';try{const c=await navigator.credentials.get({password:true,mediation});return (c&&c.password)||''}catch(e){return ''}}
+async function storeCred(k){if(!canCred||!k)return;try{await navigator.credentials.store(new PasswordCredential({id:'민기',password:k,name:'루틴의 힘 · 하준이의 미션 클라우드'}))}catch(e){}}
+function unionPhotos(a,b){const o={};for(const p in (a||{}))o[p]=[...(a[p]||[])];for(const p in (b||{}))o[p]=[...new Set([...(o[p]||[]),...(b[p]||[])])];return o}
+// 저장공간이 지워진 뒤 다시 연결할 때: 클라우드 기록이 우선, 이 기기에서 새로 넣은 항목·사진만 보탠다
+function relinkMergeRec(l,r){if(!r)return l;if(!l)return r;
+  const m={...l,...r};const ph=unionPhotos(r.photos,l.photos);if(Object.keys(ph).length)m.photos=ph;else delete m.photos;
+  const same=Object.keys(m).every(k=>k==='u'||JSON.stringify(m[k])===JSON.stringify(r[k]))&&Object.keys(r).every(k=>k in m);
+  return same?r:{...m,u:Date.now()}}
+function rlWire(useKey){
+  document.getElementById('rlform').onsubmit=e=>{e.preventDefault();const k=document.getElementById('rlkey').value.trim();if(!k){document.getElementById('rlkey').focus();return}typedKey=k;document.getElementById('rlmsg').textContent='연결 중…';useKey(k)};
+  document.getElementById('rlsaved').onclick=async()=>{document.getElementById('rlmsg').textContent='저장된 비밀번호 찾는 중…';const k=await credKey('optional');if(k){document.getElementById('rlmsg').textContent='연결 중…';useKey(k)}else document.getElementById('rlmsg').textContent='저장된 비밀번호가 없어요 · 위 칸에 직접 넣어 주세요'};
+}
+async function rlAuto(useKey,hasKey){const k=(await credKey('silent'))||(await credKey('optional'));if(k&&!hasKey())useKey(k)}
+function useKey(k){ckey=k;saveKey();cloudPull()}
+function needKey(){cstat('','🔒 비밀번호를 넣으면 클라우드 연결');rlShow();try{phStat()}catch(e){}}
 function cstat(c,t){const d=document.getElementById('cdot'),s=document.getElementById('ctext');if(d){d.className=c;s.textContent=t}}
 function mergeIn(remote){let ch=false;const cd={};for(const rk in remote)if(isDate(rk))cd[rk]=remote[rk];cloudDad=cd;for(const rk in remote){if(rk.indexOf('h:')!==0)continue;const d=rk.slice(2);if(!isDate(d))continue;const r=remote[rk],l=data[d];if(!l||Number(r.u||0)>Number(l.u||0)){data[d]=r;ch=true}}
   if(ch){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}render()}else renderVs()}
 async function cloudPull(){
-  if(!ckey)return;cstat('busy','동기화 중…');
+  if(!ckey){needKey();return}cstat('busy','동기화 중…');
   try{const j=await (await fetch(CLOUD_URL+'?key='+encodeURIComponent(ckey))).json();
-    if(j.error){cstat('bad',j.error==='key'?'비밀번호가 달라요':'연결 오류');return}
-    cloudReady=true;const rem=j.data||{};mergeIn(rem);phSyncAll();
+    if(j.error){if(j.error==='key'){relink=true;cstat('bad','비밀번호가 달라요');rlShow('비밀번호가 달라요 · 다시 넣어 주세요')}else{cstat('bad','연결 오류');if(typedKey)document.getElementById('rlmsg').textContent='연결 오류 · 잠시 뒤 다시 눌러 주세요'}typedKey='';return}
+    cloudReady=true;const rem=j.data||{},was=relink;
+    if(relink){let ch=false;for(const d in data){if(isDate(d)&&rem['h:'+d]){data[d]=relinkMergeRec(data[d],rem['h:'+d]);ch=true}}if(ch){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}relink=false;try{localStorage.removeItem('hajun-relink')}catch(e){}}
+    if(typedKey){storeCred(typedKey);typedKey=''}
+    rlHide();mergeIn(rem);phSyncAll();if(was){render();toast('클라우드에서 기록과 사진을 다시 불러왔어요')}
     const miss=Object.keys(data).filter(d=>isDate(d)&&(!rem['h:'+d]||Number(data[d].u||0)>Number(rem['h:'+d].u||0)));
     if(miss.length)cloudPush(miss);else cstat('ok','클라우드 동기화됨');
   }catch(e){cstat('bad','오프라인 · 연결되면 다시 저장')}
@@ -908,12 +951,12 @@ async function flush(){
   if(busy||!ckey||!pending.size)return;busy=true;const keys=[...pending];pending.clear();cstat('busy','저장 중…');
   const records={};keys.forEach(k=>{if(data[k])records['h:'+k]={...data[k],u:data[k].u||Date.now()}});
   try{const j=await (await fetch(CLOUD_URL,{method:'POST',body:JSON.stringify({key:ckey,records})})).json();
-    if(j.error){cstat('bad',j.error==='key'?'비밀번호가 달라요':'연결 오류');keys.forEach(k=>pending.add(k))}else{mergeIn(j.data||{});cstat('ok','클라우드 동기화됨')}
+    if(j.error){if(j.error==='key'){relink=true;cstat('bad','비밀번호가 달라요');rlShow('비밀번호가 달라요 · 다시 넣어 주세요')}else cstat('bad','연결 오류');keys.forEach(k=>pending.add(k))}else{mergeIn(j.data||{});cstat('ok','클라우드 동기화됨')}
   }catch(e){cstat('bad','오프라인 · 연결되면 다시 저장');keys.forEach(k=>pending.add(k))}
   busy=false;if(pending.size)ptimer=setTimeout(flush,4000);
 }
 document.getElementById('cedit').onclick=()=>{document.getElementById('cform').classList.toggle('open');document.getElementById('ckey').value=ckey};
-document.getElementById('csave').onclick=()=>{ckey=document.getElementById('ckey').value.trim();try{localStorage.setItem('hajun-cloud',JSON.stringify({key:ckey}))}catch(e){}document.getElementById('cform').classList.remove('open');cloudPull()};
+document.getElementById('csave').onclick=()=>{ckey=document.getElementById('ckey').value.trim();typedKey=ckey;saveKey();document.getElementById('cform').classList.remove('open');cloudPull()};
 window.addEventListener('online',()=>{if(pending.size)flush();else cloudPull()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')cloudPull()});
 /* ===== 이동 ===== */
@@ -926,14 +969,15 @@ document.getElementById('pm').onclick=()=>{mon=new Date(mon.getFullYear(),mon.ge
 document.getElementById('nm').onclick=()=>{mon=new Date(mon.getFullYear(),mon.getMonth()+1,1);renderMonth()};
 (function seedFirstComp(){try{
   const k='2026-10-10',F1='hajun-seed-comp-20261010',F2='hajun-seed-quest-20261010';let ch=false;
-  if(!localStorage.getItem(F1)){localStorage.setItem(F1,'1');const r=data[k]||{};if(!comps(r).length){data[k]={...r,comp:['주짓수'],compNote:r.compNote||'첫 주짓수 대회! 스탠딩에서 한 번도 안 넘어갔어. 다음엔 경기 끝날 때까지 상대만 보기 👀',u:Date.now()};ch=true}}
-  if(!localStorage.getItem(F2)){localStorage.setItem(F2,'1');const r=data[k]||{};if(comps(r).length&&!(Array.isArray(r.quests)&&r.quests.length)){data[k]={...r,quests:[{id:'q20261010a',t:'암바 막기',ok:null},{id:'q20261010b',t:'버터플라이 스윕 막기',ok:null}],u:Date.now()};ch=true}}
+  if(!localStorage.getItem(F1)){localStorage.setItem(F1,'1');const r=data[k]||{};if(!comps(r).length){data[k]={...r,comp:['주짓수'],compNote:r.compNote||'첫 주짓수 대회! 스탠딩에서 한 번도 안 넘어갔어. 다음엔 경기 끝날 때까지 상대만 보기 👀',u:r.u||1};ch=true}}
+  if(!localStorage.getItem(F2)){localStorage.setItem(F2,'1');const r=data[k]||{};if(comps(r).length&&!(Array.isArray(r.quests)&&r.quests.length)){data[k]={...r,quests:[{id:'q20261010a',t:'암바 막기',ok:null},{id:'q20261010b',t:'버터플라이 스윕 막기',ok:null}],u:r.u||1};ch=true}}
   const k2='2026-08-15',F3='hajun-seed-comp-20260815';
-  if(!localStorage.getItem(F3)){localStorage.setItem(F3,'1');const r=data[k2]||{};if(!comps(r).includes('유도')){data[k2]={...r,comp:[...comps(r),'유도'],compNote:r.compNote||'송파 유도대회 · 하준이의 첫 대회! 처음 대회 매트에 선 용기 💪',u:Date.now()};ch=true}}
+  if(!localStorage.getItem(F3)){localStorage.setItem(F3,'1');const r=data[k2]||{};if(!comps(r).includes('유도')){data[k2]={...r,comp:[...comps(r),'유도'],compNote:r.compNote||'송파 유도대회 · 하준이의 첫 대회! 처음 대회 매트에 선 용기 💪',u:r.u||1};ch=true}}
   if(ch){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}setTimeout(()=>cloudPush([k,k2]),0)}
 }catch(e){}})();
 render();
-if(ckey)cloudPull();else{cstat('','비밀번호를 넣으면 클라우드 연결');document.getElementById('cform').classList.add('open')}
+rlWire(useKey);
+if(ckey)cloudPull();else{needKey();rlAuto(useKey,()=>!!ckey)}
 </script>
 </body>
 </html>
