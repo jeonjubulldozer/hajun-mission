@@ -849,7 +849,7 @@ function renderCompLog(){
 }
 // ===== 아빠랑 한 팀 (같은 폰이면 폰 저장소, 다른 기기면 클라우드에서 아빠 기록 읽기) =====
 let cloudDad={};
-const DAD_STR=['bbs','bbrow','bblunge','squat','kbs','kbsn','pull','bench'];
+const DAD_STR=['bbs','bbrow','bblunge','bblungeSet','sqjump','squat','kbs','kbsn','pull','bench'];
 const H_STR=['jp','spin','swsq','row','hang'];
 function dadRecs(){let loc={};try{loc=JSON.parse(localStorage.getItem('workout-log-v1')||'{}')||{}}catch(e){}
   const out={...cloudDad};for(const k in loc){if(!out[k]||Number(loc[k].u||0)>=Number(out[k].u||0))out[k]=loc[k]}return out}
